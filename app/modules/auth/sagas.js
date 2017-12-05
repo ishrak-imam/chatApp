@@ -12,7 +12,12 @@ const at = {
   home: {screen: 'Home', title: 'Home'}
 }
 
-const login = true
+function checkLogin () {
+  return new Promise((resolve, reject) => {
+    const login = true
+    login ? resolve('login') : reject('not login')
+  })
+}
 
 export function * watchStartApp () {
   yield takeLatest(startApp.getType(), workerStartApp)
@@ -27,5 +32,12 @@ export function * watchInit () {
 }
 
 function * workerInit () {
-  login ? yield put(startApp(at.home)) : yield put(startApp(at.login))
+  try {
+    const login = yield call(checkLogin)
+    console.log(login)
+    yield put(startApp(at.home))
+  } catch (e) {
+    console.log(e)
+    yield put(startApp(at.login))
+  }
 }
