@@ -12,7 +12,7 @@ const at = {
   home: {screen: 'Home', title: 'Home'}
 }
 
-const login = false
+const login = true
 
 export function * watchStartApp () {
   yield takeLatest(startApp.getType(), workerStartApp)
