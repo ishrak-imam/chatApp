@@ -1,7 +1,7 @@
 
 import { Navigation } from 'react-native-navigation'
 
-import Login from '../modules/auth/login'
+import Signin from '../modules/auth/signin'
 import Home from '../modules/home/index'
 
 // app initialization action
@@ -30,7 +30,7 @@ class Application {
 
   _configureScreens (Store, Provider) {
     const screens = {
-      Login,
+      Signin,
       Home
     }
     Object.keys(screens).map(key => {

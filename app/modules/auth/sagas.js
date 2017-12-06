@@ -8,13 +8,13 @@ import {
 import RootNavigator from '../../navigation/rootNavigator'
 
 const at = {
-  login: {screen: 'Login', title: 'Login'},
+  login: {screen: 'Signin', title: 'Sign in'},
   home: {screen: 'Home', title: 'Home'}
 }
 
 function checkLogin () {
   return new Promise((resolve, reject) => {
-    const login = true
+    const login = false
     login ? resolve('login') : reject('not login')
   })
 }
