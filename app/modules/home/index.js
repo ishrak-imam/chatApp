@@ -1,41 +1,30 @@
 
 import React, {Component} from 'react'
-import {View, Text} from 'react-native'
+import {
+  View, Text, Button
+} from 'react-native'
 
-import Realm from 'realm'
+import {signOutReq} from '../auth/reducers'
+import {connect} from 'react-redux'
 
-export default class Home extends Component {
+class Home extends Component {
   constructor () {
     super()
-    this.state = {realm: null}
+    this._signOut = this._signOut.bind(this)
   }
 
-  componentWillMount () {
-    Realm.open({
-      schema: [{name: 'DOG', properties: {name: 'string', breed: 'string'}}]
-    }).then(realm => {
-      realm.write(() => {
-        realm.create('DOG', {name: 'Richard Parker', breed: 'a'})
-        realm.create('DOG', {name: 'Richard Parker', breed: 'b'})
-        realm.create('DOG', {name: 'Richard Parker', breed: 'c'})
-      })
-      // this.setState({realm})
-      const dogs = realm.objects('DOG')
-      console.log(Array.from(dogs))
-    })
+  _signOut () {
+    this.props.dispatch(signOutReq())
   }
 
   render () {
-    // const {realm} = this.state
-    // if (realm) {
-    //   const dogs = realm.objects('DOG')
-    //   const a = dogs.filtered('breed = "b"')
-    //   console.log(a)
-    // }
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text>Home page</Text>
+        <Button title='Sign out' onPress={this._signOut} />
       </View>
     )
   }
 }
+
+export default connect(dispatch => ({dispatch}))(Home)

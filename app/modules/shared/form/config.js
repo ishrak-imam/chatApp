@@ -52,16 +52,16 @@ export const REGISTER_FORM = {
   name: 'register',
   submitText: 'REGISTER',
   fields: [
-    {
-      name: 'firstname',
-      placeholder: 'First name *',
-      autoCapitalize: 'none'
-    },
-    {
-      name: 'lastname',
-      placeholder: 'Last name *',
-      autoCapitalize: 'none'
-    },
+    // {
+    //   name: 'firstname',
+    //   placeholder: 'First name *',
+    //   autoCapitalize: 'none'
+    // },
+    // {
+    //   name: 'lastname',
+    //   placeholder: 'Last name *',
+    //   autoCapitalize: 'none'
+    // },
     {
       name: 'email',
       keyboardType: 'email-address',
@@ -76,12 +76,12 @@ export const REGISTER_FORM = {
   ],
   validate: values => {
     const errors = {}
-    if (!values.firstname) {
-      errors.firstname = 'First name is required'
-    }
-    if (!values.lastname) {
-      errors.lastname = 'Last name is required'
-    }
+    // if (!values.firstname) {
+    //   errors.firstname = 'First name is required'
+    // }
+    // if (!values.lastname) {
+    //   errors.lastname = 'Last name is required'
+    // }
     if (!values.email) {
       errors.email = 'Enter email'
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {

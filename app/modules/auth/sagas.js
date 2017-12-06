@@ -1,22 +1,32 @@
 
 import {call, put, takeLatest} from 'redux-saga/effects'
 import {
-  init,
-  startApp
+  startApp,
+  singInReq,
+  signInSucs,
+  signInFail,
+  registerReq,
+  registerSucs,
+  registerFail,
+  signOutSucs,
+  signOutReq
 } from './reducers'
 
+import {
+  register,
+  signIn,
+  setDisplayName,
+  onAuthStateChanged,
+  signOut
+} from '../../firebase'
+
 import RootNavigator from '../../navigation/rootNavigator'
+
+import store from '../../store/configure'
 
 const at = {
   login: {screen: 'Signin', title: 'Sign in'},
   home: {screen: 'Home', title: 'Home'}
-}
-
-function checkLogin () {
-  return new Promise((resolve, reject) => {
-    const login = false
-    login ? resolve('login') : reject('not login')
-  })
 }
 
 export function * watchStartApp () {
@@ -27,17 +37,38 @@ function * workerStartApp (action) {
   yield call(RootNavigator.startApp, action.payload)
 }
 
-export function * watchInit () {
-  yield takeLatest(init.getType(), workerInit)
+export function * watchRegister () {
+  yield takeLatest(registerReq.getType(), workerRegister)
 }
 
-function * workerInit () {
+function * workerRegister (action) {
   try {
-    const login = yield call(checkLogin)
-    console.log(login)
-    yield put(startApp(at.home))
-  } catch (e) {
-    console.log(e)
-    yield put(startApp(at.login))
+    yield call(register, action.payload)
+  } catch (err) {
+    yield put(registerFail(err))
   }
+}
+
+export function * watchSignOut () {
+  yield takeLatest(signOutReq.getType(), workerSignOut)
+}
+
+export function * workerSignOut () {
+  yield call(signOut)
+}
+
+export function * watchAuthStatus () {
+  const authWatcher = function (user) {
+    if (user) {
+      const userObj = {
+        email: user.email
+      }
+      store.dispatch(signInSucs(userObj))
+      store.dispatch(startApp(at.home))
+    } else {
+      store.dispatch(signOutSucs())
+      store.dispatch(startApp(at.login))
+    }
+  }
+  onAuthStateChanged(authWatcher)
 }
