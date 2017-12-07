@@ -4,6 +4,7 @@ import { Navigation } from 'react-native-navigation'
 import Signin from '../modules/auth/signin'
 import Register from '../modules/auth/register'
 import Home from '../modules/home/index'
+import Chat from '../modules/chat/index'
 
 // app initialization action
 import { init } from '../modules/auth/reducers'
@@ -33,7 +34,8 @@ class Application {
     const screens = {
       Signin,
       Register,
-      Home
+      Home,
+      Chat
     }
     Object.keys(screens).map(key => {
       Navigation.registerComponent(`${key}`, () => screens[key], Store, Provider)
