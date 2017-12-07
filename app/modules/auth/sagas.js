@@ -1,8 +1,9 @@
 
 import {call, put, takeLatest} from 'redux-saga/effects'
 import {
+  init,
   startApp,
-  singInReq,
+  signInReq,
   signInSucs,
   signInFail,
   registerReq,
@@ -15,14 +16,12 @@ import {
 import {
   register,
   signIn,
-  setDisplayName,
-  onAuthStateChanged,
   signOut
 } from '../../firebase'
 
 import RootNavigator from '../../navigation/rootNavigator'
 
-import store from '../../store/configure'
+import {setData, getData, removeData} from '../../storage'
 
 const at = {
   login: {screen: 'Signin', title: 'Sign in'},
@@ -37,15 +36,54 @@ function * workerStartApp (action) {
   yield call(RootNavigator.startApp, action.payload)
 }
 
+export function * watchInit () {
+  yield takeLatest(init.getType(), workerInit)
+}
+
+function * workerInit () {
+  const user = yield call(getData)
+  if (user) {
+    yield put(signInSucs(user))
+    yield put(startApp(at.home))
+  } else {
+    yield put(startApp(at.login))
+  }
+}
+
 export function * watchRegister () {
   yield takeLatest(registerReq.getType(), workerRegister)
 }
 
 function * workerRegister (action) {
   try {
-    yield call(register, action.payload)
+    const response = yield call(register, action.payload)
+    const user = {
+      email: response.email,
+      uid: response.uid
+    }
+    yield call(setData, user)
+    yield put(registerSucs())
+    yield put(init())
   } catch (err) {
     yield put(registerFail(err))
+  }
+}
+
+export function * watchSignIn () {
+  yield takeLatest(signInReq.getType(), workerSignIn)
+}
+
+function * workerSignIn (action) {
+  try {
+    const response = yield call(signIn, action.payload)
+    const user = {
+      email: response.email,
+      uid: response.uid
+    }
+    yield call(setData, user)
+    yield put(init())
+  } catch (err) {
+    yield put(signInFail(err))
   }
 }
 
@@ -53,22 +91,13 @@ export function * watchSignOut () {
   yield takeLatest(signOutReq.getType(), workerSignOut)
 }
 
-export function * workerSignOut () {
-  yield call(signOut)
-}
-
-export function * watchAuthStatus () {
-  const authWatcher = function (user) {
-    if (user) {
-      const userObj = {
-        email: user.email
-      }
-      store.dispatch(signInSucs(userObj))
-      store.dispatch(startApp(at.home))
-    } else {
-      store.dispatch(signOutSucs())
-      store.dispatch(startApp(at.login))
-    }
+function * workerSignOut () {
+  try {
+    yield call(signOut)
+    yield call(removeData)
+    yield put(signOutSucs())
+    yield put(init())
+  } catch (err) {
+    console.log('SIGNOUT ERROR ::: ', err)
   }
-  onAuthStateChanged(authWatcher)
 }

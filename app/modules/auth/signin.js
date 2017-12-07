@@ -1,15 +1,17 @@
 
 import React, {Component} from 'react'
 import {
-  Screen, View, TouchableOpacity,
-  Tile, Caption, Text
-} from '@shoutem/ui'
+  View, Text, TouchableOpacity
+} from 'react-native'
+import STYLES from '../../styles/common'
 import {connect} from 'react-redux'
 import SigninForm from '../shared/form/container'
 import { SIGNIN_FORM, ERROR_COLOR } from '../shared/form/config'
 
 import { getNavInfo } from '../../utils/navigation'
-import {pushScene} from '../../navigation/sagas'
+import { pushScene } from '../../navigation/sagas'
+
+import { signInReq } from './reducers'
 
 class Signin extends Component {
   constructor () {
@@ -20,15 +22,16 @@ class Signin extends Component {
   }
 
   _renderError () {
+    const error = this.props.auth.error.signIn
     return (
-      this.props.error
-        ? (<Caption style={{ color: ERROR_COLOR }}>{this.props.error.message}</Caption>)
+      error
+        ? (<Text style={{ color: ERROR_COLOR }}>{error.message}</Text>)
         : (null)
     )
   }
 
   _signIn (obj) {
-    console.log(obj)
+    this.props.dispatch(signInReq(obj))
   }
 
   _goToRegister () {
@@ -39,23 +42,21 @@ class Signin extends Component {
 
   render () {
     return (
-      <Screen>
-        <Tile styleName='text-centric'>
-          <View style={{ marginTop: 10 }}>
-            {this._renderError()}
-          </View>
-          <View>
-            <SigninForm onSubmit={this._signIn} config={SIGNIN_FORM} />
-          </View>
-          <View styleName='vertical h-center' style={{marginTop: 20}}>
-            <TouchableOpacity onPress={this._goToRegister}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>REGISTER</Text>
-            </TouchableOpacity>
-          </View>
-        </Tile>
-      </Screen>
+      <View style={[{ flex: 1 }, STYLES.center]}>
+        <View style={{ marginTop: 10 }}>
+          {this._renderError()}
+        </View>
+        <SigninForm onSubmit={this._signIn} config={SIGNIN_FORM} />
+        <View style={{marginTop: 30}}>
+          <TouchableOpacity onPress={this._goToRegister}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>REGISTER</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     )
   }
 }
 
-export default connect(dispatch => ({dispatch}))(Signin)
+const stateToProps = ({ auth }) => ({ auth })
+
+export default connect(stateToProps, dispatch => ({dispatch}))(Signin)

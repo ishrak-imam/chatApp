@@ -35,5 +35,3 @@ export function onAuthStateChanged (payload) {
 export function signOut () {
   fireBase.auth().signOut()
 }
-
-export default fireBase

@@ -1,12 +1,11 @@
 
 import React, {Component} from 'react'
-import {
-  Screen, View,
-  Tile, Caption
-} from '@shoutem/ui'
+import {View, Text} from 'react-native'
 import {connect} from 'react-redux'
 import RegisterForm from '../shared/form/container'
 import { REGISTER_FORM, ERROR_COLOR } from '../shared/form/config'
+
+import STYLES from '../../styles/common'
 
 import {registerReq} from './reducers'
 
@@ -21,7 +20,7 @@ class Register extends Component {
     const error = this.props.auth.error.register
     return (
       error
-        ? (<Caption style={{ color: ERROR_COLOR }}>{error.message}</Caption>)
+        ? (<Text style={{ color: ERROR_COLOR }}>{error.message}</Text>)
         : (null)
     )
   }
@@ -32,16 +31,12 @@ class Register extends Component {
 
   render () {
     return (
-      <Screen>
-        <Tile styleName='text-centric'>
-          <View style={{ marginTop: 10 }}>
-            {this._renderError()}
-          </View>
-          <View>
-            <RegisterForm onSubmit={this._register} config={REGISTER_FORM} />
-          </View>
-        </Tile>
-      </Screen>
+      <View style={[{ flex: 1 }, STYLES.center]}>
+        <View style={{marginTop: 10}}>
+          {this._renderError()}
+        </View>
+        <RegisterForm onSubmit={this._register} config={REGISTER_FORM} />
+      </View>
     )
   }
 }

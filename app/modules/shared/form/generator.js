@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import {
-  View, Text,
+  View, Text, TextInput,
   TouchableOpacity
-} from '@shoutem/ui'
-import { TextInput } from 'react-native'
+} from 'react-native'
 
 import { FORM, ERROR_COLOR } from './config'
 
 import { Field, reduxForm } from 'redux-form'
+
+import STYLES from '../../../styles/common'
 
 const validate = (values, props) => {
   return props.config.validate(values)
@@ -60,7 +61,7 @@ class Form extends Component {
     return (
       <View>
         {this._renderInputs()}
-        <View styleName='vertical h-center' style={{marginTop: 20}}>
+        <View style={[STYLES.center, {marginTop: 20}]}>
           <TouchableOpacity onPress={handleSubmit(this._handleSubmit)}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}>{config.submitText}</Text>
           </TouchableOpacity>
