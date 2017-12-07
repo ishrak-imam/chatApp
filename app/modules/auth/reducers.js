@@ -8,7 +8,6 @@ const AUTH_INITIAL_STATE = {
   error: {signIn: null, register: null}
 }
 
-export const init = createAction('INIT')
 export const startApp = createAction('START_APP')
 
 export const signInReq = createAction('SIGNIN_REQ')
@@ -29,7 +28,7 @@ const auth = createReducer({
   [signInFail]: (state, payload) => ({...state, loading: false, error: {...state.error, signIn: payload}}),
 
   [registerReq]: (state, payload) => ({...state, loading: true, error: {...state.error, register: null}}),
-  [registerSucs]: (state, payload) => ({...state, loading: false, error: AUTH_INITIAL_STATE.error}),
+  [registerSucs]: (state, payload) => ({ ...state, login: true, loading: false, user: payload, error: AUTH_INITIAL_STATE.error }),
   [registerFail]: (state, payload) => ({...state, loading: false, error: {...state.error, register: payload}}),
 
   [signOutSucs]: (state, payload) => AUTH_INITIAL_STATE

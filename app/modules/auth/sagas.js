@@ -1,7 +1,6 @@
 
 import {call, put, takeLatest} from 'redux-saga/effects'
 import {
-  init,
   startApp,
   signInReq,
   signInSucs,
@@ -16,12 +15,13 @@ import {
 import {
   register,
   signIn,
+  onAuthStateChanged,
   signOut
 } from '../../firebase'
 
 import RootNavigator from '../../navigation/rootNavigator'
 
-import {setData, getData, removeData} from '../../storage'
+import store from '../../store/configure'
 
 const at = {
   login: {screen: 'Signin', title: 'Sign in'},
@@ -36,20 +36,6 @@ function * workerStartApp (action) {
   yield call(RootNavigator.startApp, action.payload)
 }
 
-export function * watchInit () {
-  yield takeLatest(init.getType(), workerInit)
-}
-
-function * workerInit () {
-  const user = yield call(getData)
-  if (user) {
-    yield put(signInSucs(user))
-    yield put(startApp(at.home))
-  } else {
-    yield put(startApp(at.login))
-  }
-}
-
 export function * watchRegister () {
   yield takeLatest(registerReq.getType(), workerRegister)
 }
@@ -61,9 +47,7 @@ function * workerRegister (action) {
       email: response.email,
       uid: response.uid
     }
-    yield call(setData, user)
-    yield put(registerSucs())
-    yield put(init())
+    yield put(registerSucs(user))
   } catch (err) {
     yield put(registerFail(err))
   }
@@ -80,8 +64,7 @@ function * workerSignIn (action) {
       email: response.email,
       uid: response.uid
     }
-    yield call(setData, user)
-    yield put(init())
+    yield put(signInSucs(user))
   } catch (err) {
     yield put(signInFail(err))
   }
@@ -94,10 +77,15 @@ export function * watchSignOut () {
 function * workerSignOut () {
   try {
     yield call(signOut)
-    yield call(removeData)
     yield put(signOutSucs())
-    yield put(init())
   } catch (err) {
     console.log('SIGNOUT ERROR ::: ', err)
   }
+}
+
+export function * watchAuthStatus () {
+  const authObserver = function (user) {
+    user ? store.dispatch(startApp(at.home)) : store.dispatch(startApp(at.login))
+  }
+  onAuthStateChanged(authObserver)
 }
