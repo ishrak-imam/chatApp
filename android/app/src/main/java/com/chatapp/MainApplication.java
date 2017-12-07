@@ -69,7 +69,7 @@ public class MainApplication extends NavigationApplication {
             new PhotoViewPackage(),
             new RNSharePackage(),
             new LinearGradientPackage(),
-            new VectorIconsPackage(),
+            new VectorIconsPackage()
         );
     }
 

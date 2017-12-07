@@ -29,6 +29,7 @@ class Form extends Component {
       <View style={{marginTop: 10}}>
         <View style={wrapStyle}>
           <TextInput
+            underlineColorAndroid='rgba(0,0,0,0)'
             style={FORM.TEXTINPUT_STYLE}
             {...input} {...config}
           />
