@@ -4,12 +4,25 @@ import { put, call, takeLatest } from 'redux-saga/effects'
 import {
   createThreadReq,
   createThreadSucs,
-  createThreadFail
+  createThreadFail,
+  sendMessageReq,
+  sendMessageSucs,
+  sendMessageFail,
+  messagesGetReq,
+  messagesGetSucs,
+  messagesGetFail
 } from './reducers'
+
+import {formatSnapshot} from '../../utils/helpers'
 
 import {pushScene} from '../../navigation/sagas'
 
-import { getAllThreads, createThread } from '../../firebase'
+import {
+  getAllThreads,
+  createThread,
+  getAllMessages,
+  sendMessage
+} from '../../firebase'
 
 function _threadExists (threads, threadId) {
   let bool = false
@@ -36,5 +49,33 @@ function * workerCreateThread (action) {
     yield put(pushScene({scene, navInfo}))
   } catch (err) {
     yield put(createThreadFail(err))
+  }
+}
+
+export function * watchGetMessages () {
+  yield takeLatest(messagesGetReq.getType(), workerGetMessages)
+}
+
+function * workerGetMessages (action) {
+  try {
+    const { threadId } = action.payload
+    const snapShot = yield call(getAllMessages, {threadId})
+    const messages = formatSnapshot(snapShot)
+    yield put(messagesGetSucs(messages))
+  } catch (err) {
+    yield put(messagesGetFail(err))
+  }
+}
+
+export function * watchSendMessage () {
+  yield takeLatest(sendMessageReq.getType(), workerSendMessage)
+}
+
+function * workerSendMessage (action) {
+  try {
+    yield call(sendMessage, action.payload)
+    yield put(sendMessageSucs())
+  } catch (err) {
+    yield put(sendMessageFail(err))
   }
 }
