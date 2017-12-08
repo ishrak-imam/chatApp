@@ -11,7 +11,7 @@ import STYLES from '../../styles/common'
 class Chat extends Component {
   render () {
     return (
-      <View style={[STYLES.center, { flex: 1 }]}>
+      <View style={[STYLES.col_center, { flex: 1 }]}>
         <Text>chat</Text>
       </View>
     )

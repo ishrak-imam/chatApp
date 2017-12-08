@@ -12,9 +12,22 @@ const fireBaseConfig = {
 
 fireBase.initializeApp(fireBaseConfig)
 
+const database = fireBase.database()
+
 export function register (payload) {
   const {email, password} = payload
   return fireBase.auth().createUserWithEmailAndPassword(email, password)
+}
+
+export function setUserData (obj) {
+  const { username, email, userId } = obj
+  return database.ref('users/' + userId).set({
+    userId, username, email
+  })
+}
+
+export function getUserList () {
+  return database.ref('users').once('value')
 }
 
 export function signIn (payload) {
@@ -35,3 +48,5 @@ export function onAuthStateChanged (payload) {
 export function signOut () {
   fireBase.auth().signOut()
 }
+
+export default database

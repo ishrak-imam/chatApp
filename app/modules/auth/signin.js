@@ -42,7 +42,7 @@ class Signin extends Component {
 
   render () {
     return (
-      <View style={[{ flex: 1 }, STYLES.center, {backgroundColor: 'white'}]}>
+      <View style={[{ flex: 1 }, STYLES.col_center, {backgroundColor: 'white'}]}>
         <View style={{ marginTop: 10 }}>
           {this._renderError()}
         </View>

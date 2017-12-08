@@ -61,7 +61,7 @@ class Form extends Component {
     return (
       <View>
         {this._renderInputs()}
-        <View style={[STYLES.center, {marginTop: 20}]}>
+        <View style={[STYLES.col_center, {marginTop: 20}]}>
           <TouchableOpacity onPress={handleSubmit(this._handleSubmit)}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}>{config.submitText}</Text>
           </TouchableOpacity>

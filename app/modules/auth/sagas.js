@@ -14,6 +14,7 @@ import {
 
 import {
   register,
+  setUserData,
   signIn,
   onAuthStateChanged,
   signOut
@@ -44,9 +45,11 @@ function * workerRegister (action) {
   try {
     const response = yield call(register, action.payload)
     const user = {
+      username: action.payload.username,
       email: response.email,
-      uid: response.uid
+      userId: response.uid
     }
+    yield call(setUserData, user)
     yield put(registerSucs(user))
   } catch (err) {
     yield put(registerFail(err))
@@ -62,7 +65,7 @@ function * workerSignIn (action) {
     const response = yield call(signIn, action.payload)
     const user = {
       email: response.email,
-      uid: response.uid
+      userId: response.uid
     }
     yield put(signInSucs(user))
   } catch (err) {
@@ -85,7 +88,12 @@ function * workerSignOut () {
 
 export function * watchAuthStatus () {
   const authObserver = function (user) {
-    user ? store.dispatch(startApp(at.home)) : store.dispatch(startApp(at.login))
+    if (user) {
+      store.dispatch(signInSucs({ email: user.email, userId: user.uid }))
+      store.dispatch(startApp(at.home))
+    } else {
+      store.dispatch(startApp(at.login))
+    }
   }
   onAuthStateChanged(authObserver)
 }
