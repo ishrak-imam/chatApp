@@ -4,7 +4,7 @@ import {createAction, createReducer} from 'redux-act'
 const AUTH_INITIAL_STATE = {
   login: false,
   loading: false,
-  user: null,
+  user: {userId: null},
   error: {signIn: null, register: null}
 }
 

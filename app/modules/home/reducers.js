@@ -4,7 +4,8 @@ import { createAction, createReducer } from 'redux-act'
 const USER_INITIAL_STATE = {
   list: [],
   loading: false,
-  error: null
+  error: null,
+  thread: null
 }
 
 export const userListReq = createAction('USER_LIST_GET_REQ')

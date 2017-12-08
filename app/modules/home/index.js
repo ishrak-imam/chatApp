@@ -9,9 +9,10 @@ import {signOutReq} from '../auth/reducers'
 import { connect } from 'react-redux'
 import STYLES from '../../styles/common'
 import { getNavInfo } from '../../utils/navigation'
-import {pushScene} from '../../navigation/sagas'
 
-import {userListReq} from './reducers'
+import { userListReq } from './reducers'
+
+import { createThreadReq } from '../chat/reducers'
 
 const windowWidth = Dimensions.get('window').width
 
@@ -39,25 +40,31 @@ class Home extends Component {
 
   _renderUserList () {
     const { userId } = this.props.auth.user
-    const { list } = this.props.user
-    return list.length
-      ? list.map((user, index) => {
-        return user.userId !== userId
-          ? <TouchableOpacity onPress={() => this._goToChat(user)} key={index}>
-            <View style={[styles.userItem, STYLES.row_space_around]}>
-              <Text>Name: {user.username}</Text>
-              <Text>Status: ONLINE</Text>
-            </View>
-          </TouchableOpacity>
-          : null
-      })
-      : null
+    if (userId) {
+      const { list } = this.props.user
+      return list.length
+        ? list.map((user, index) => {
+          return user.userId !== userId
+            ? <TouchableOpacity onPress={() => this._goToChat(user)} key={index}>
+              <View style={[styles.userItem, STYLES.row_space_around]}>
+                <Text>Name: {user.username}</Text>
+                <Text>Status: ONLINE</Text>
+              </View>
+            </TouchableOpacity>
+            : null
+        })
+        : null
+    }
   }
 
   _goToChat (buddy) {
     const navInfo = getNavInfo(this.props)
     const scene = { screen: 'Chat', title: 'Chat' }
-    this.props.dispatch(pushScene({ scene, navInfo }))
+
+    const { userId } = this.props.auth.user
+    const buddyId = buddy.userId
+    const threadId = userId > buddyId ? `${userId}-${buddyId}` : `${buddyId}-${userId}`
+    this.props.dispatch(createThreadReq({threadId, scene, navInfo}))
   }
 
   _signOut () {

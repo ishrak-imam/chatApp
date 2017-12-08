@@ -4,10 +4,13 @@ import { put, call, takeLatest } from 'redux-saga/effects'
 import {
   userListReq,
   userListSucs,
-  userListFail
+  userListFail,
+  createThreadReq,
+  createThreadSucs,
+  createThreadFail
 } from './reducers'
 
-import {getUserList} from '../../firebase'
+import {getUserList, getAllThreads, createThread} from '../../firebase'
 
 export function * watchGetUserList () {
   yield takeLatest(userListReq.getType(), workerGetUserList)

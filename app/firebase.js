@@ -35,10 +35,21 @@ export function signIn (payload) {
   return fireBase.auth().signInWithEmailAndPassword(email, password)
 }
 
-export function setDisplayName (payload) {
-  const {displayName} = payload
-  const user = fireBase.auth().currentUser
-  return user.updateProfile({displayName})
+// export function setDisplayName (payload) {
+//   const {displayName} = payload
+//   const user = fireBase.auth().currentUser
+//   return user.updateProfile({displayName})
+// }
+
+export function createThread (payload) {
+  const { threadId } = payload
+  return database.ref('threads/' + threadId).set({
+    threadId
+  })
+}
+
+export function getAllThreads () {
+  return database.ref('threads').once('value')
 }
 
 export function onAuthStateChanged (payload) {
@@ -48,5 +59,3 @@ export function onAuthStateChanged (payload) {
 export function signOut () {
   fireBase.auth().signOut()
 }
-
-export default database
