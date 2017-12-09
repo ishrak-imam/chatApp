@@ -47,6 +47,11 @@ function eventEmitterChannel (emitter, type) {
   })
 }
 
+/**
+ * here user list is implemented through eventChannel
+ * because it will perform as a listener for new user sign up
+ */
+
 export function * watchNewUsers () {
   yield takeLatest(startUserMonitor.getType(), createIncomingUserSubscription)
 }
