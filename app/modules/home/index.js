@@ -48,7 +48,7 @@ class Home extends Component {
           return user.userId !== userId
             ? <TouchableOpacity onPress={() => this._goToChat(user)} key={index}>
               <View style={[styles.userItem, STYLES.row_space_around]}>
-                <Text>Name: {user.username}</Text>
+                <Text>{user.username}</Text>
                 {/* <Text>Status: ONLINE</Text> */}
               </View>
             </TouchableOpacity>
@@ -60,7 +60,7 @@ class Home extends Component {
 
   _goToChat (buddy) {
     const navInfo = getNavInfo(this.props)
-    const scene = { screen: 'Chat', title: 'Chat' }
+    const scene = { screen: 'Chat' }
 
     const { userId } = this.props.auth.user
     const buddyId = buddy.userId

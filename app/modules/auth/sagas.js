@@ -13,6 +13,10 @@ import {
 } from './reducers'
 
 import {
+  clearUserList
+} from '../home/reducers'
+
+import {
   register,
   setUserData,
   signIn,
@@ -81,6 +85,7 @@ function * workerSignOut () {
   try {
     yield call(signOut)
     yield put(signOutSucs())
+    yield put(clearUserList())
   } catch (err) {
     console.log('SIGNOUT ERROR ::: ', err)
   }

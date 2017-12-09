@@ -16,6 +16,11 @@ class Chat extends Component {
     this._sendMessage = this._sendMessage.bind(this)
   }
 
+  componentWillMount () {
+    const {username} = this.props.chat.buddy
+    this.props.navigator.setTitle({ title: `Chat with: ${username}` })
+  }
+
   componentWillUnmount () {
     this.props.dispatch(stopMessageMonitor())
   }

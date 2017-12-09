@@ -31,7 +31,7 @@ class Register extends Component {
 
   render () {
     return (
-      <View style={[{ flex: 1 }, STYLES.col_center, { backgroundColor: 'white' }]}>
+      <View style={[{ flex: 1 }, STYLES.col_start, { backgroundColor: 'white', marginTop: 50 }]}>
         <View style={{marginTop: 10}}>
           {this._renderError()}
         </View>

@@ -2,6 +2,11 @@
 import { StyleSheet } from 'react-native'
 
 const STYLES = StyleSheet.create({
+  col_start: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
   col_center: {
     flexDirection: 'column',
     justifyContent: 'center',
