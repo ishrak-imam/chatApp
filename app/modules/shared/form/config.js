@@ -72,7 +72,7 @@ export const REGISTER_FORM = {
   validate: values => {
     const errors = {}
     if (!values.username) {
-      errors.username = 'User name is required'
+      errors.username = 'Enter user name'
     }
     if (!values.email) {
       errors.email = 'Enter email'
