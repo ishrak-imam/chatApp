@@ -18,9 +18,8 @@ import {
 } from './reducers'
 
 import {
-  // formatMessages,
   threadExists,
-  formatMessage
+  formatSingleObject
 } from '../../utils/helpers'
 
 import {pushScene} from '../../navigation/sagas'
@@ -59,7 +58,7 @@ function * workerCreateThread (action) {
 //   try {
 //     const { threadId } = action.payload
 //     const snapShot = yield call(getAllMessages, {threadId})
-//     const messages = formatMessages(snapShot)
+//     const messages = formatSnapshot(snapShot)
 //     yield put(messagesGetSucs(messages))
 //     yield put(startMessageMonitor({threadId}))
 //   } catch (err) {
@@ -103,7 +102,7 @@ function * createIncomingMessagesSubscription (action) {
   }, messagesChannel)
 
   yield takeEvery(messagesChannel, function * (message) {
-    const payload = formatMessage(message)
+    const payload = formatSingleObject(message)
     yield put(incomingMessage(payload))
   })
 }
