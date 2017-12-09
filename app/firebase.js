@@ -26,9 +26,9 @@ export function setUserData (obj) {
   })
 }
 
-export function getUserList () {
-  return database.ref('users').once('value')
-}
+// export function getUserList () {
+//   return database.ref('users').once('value')
+// }
 
 export function signIn (payload) {
   const {email, password} = payload
@@ -67,6 +67,10 @@ export function sendMessage (payload) {
 export function getThreadRef (payload) {
   const {threadId} = payload
   return database.ref('threads/' + threadId + '/messages')
+}
+
+export function getUserRef () {
+  return database.ref('users')
 }
 
 export function onAuthStateChanged (payload) {

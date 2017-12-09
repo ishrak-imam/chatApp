@@ -10,9 +10,12 @@ import { connect } from 'react-redux'
 import STYLES from '../../styles/common'
 import { getNavInfo } from '../../utils/navigation'
 
-import { userListReq } from './reducers'
+import { startUserMonitor, stopUserMonitor } from './reducers'
 
-import { createThreadReq } from '../chat/reducers'
+import {
+  // userListReq,
+  createThreadReq
+} from '../chat/reducers'
 
 const windowWidth = Dimensions.get('window').width
 
@@ -34,9 +37,14 @@ class Home extends Component {
     this._renderUserList = this._renderUserList.bind(this)
   }
 
+  componentWillUnmount () {
+    this.props.dispatch(stopUserMonitor())
+  }
+
   componentDidMount () {
     const currentUserId = this.props.auth.user.userId
-    this.props.dispatch(userListReq({currentUserId}))
+    // this.props.dispatch(userListReq({currentUserId}))
+    this.props.dispatch(startUserMonitor({currentUserId}))
   }
 
   _renderUserList () {
