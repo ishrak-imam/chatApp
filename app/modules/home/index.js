@@ -64,7 +64,7 @@ class Home extends Component {
     const { userId } = this.props.auth.user
     const buddyId = buddy.userId
     const threadId = userId > buddyId ? `${userId}-${buddyId}` : `${buddyId}-${userId}`
-    this.props.dispatch(createThreadReq({threadId, scene, navInfo}))
+    this.props.dispatch(createThreadReq({threadId, buddy, scene, navInfo}))
   }
 
   _signOut () {

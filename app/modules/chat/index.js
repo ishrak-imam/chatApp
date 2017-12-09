@@ -7,63 +7,73 @@ import {
 import { connect } from 'react-redux'
 import STYLES from '../../styles/common'
 
-import database from '../../firebase'
+// import database from '../../firebase'
+
+import { GiftedChat } from 'react-native-gifted-chat'
 
 import {
   messagesGetReq,
-  sendMessageReq
+  sendMessageReq,
+  stopMessageMonitor
 } from './reducers'
 
 class Chat extends Component {
   constructor () {
     super()
+    // this.state = {
+    //   messages: [
+    //     {
+    //       _id: 1,
+    //       text: 'Hello developer',
+    //       createdAt: new Date(),
+    //       user: {
+    //         _id: 2,
+    //         name: 'React Native',
+    //         avatar: 'https://facebook.github.io/react/img/logo_og.png'
+    //       }
+    //     }
+    //   ]
+    // }
     this._sendMessage = this._sendMessage.bind(this)
   }
 
-  componentDidMount () {
-    const threadId = this.props.chat.thread
-    database.ref('threads/' + threadId + '/messages').on('value', (snapshot) => {
-      console.log(snapshot.val())
-    })
-    this.props.dispatch(messagesGetReq({ threadId }))
+  componentWillUnmount () {
+    this.props.dispatch(stopMessageMonitor())
   }
 
-  _sendMessage () {
-    // // database.ref('threads/' + threadId).set({
-    // //   threadId
-    // // })
+  componentDidMount () {
+    const {threadId} = this.props.chat
+    // database.ref('threads/' + threadId + '/messages').on('value', (snapshot) => {
+    //   console.log(snapshot.val())
+    // })
+    this.props.dispatch(messagesGetReq({ threadId }))
+    // this.props.dispatch(startMessageMonitor({threadId}))
+  }
 
-    const threadId = this.props.chat.thread
-
+  _sendMessage (payload) {
+    const {threadId, buddy} = this.props.chat
+    const {userId, username} = this.props.auth.user
     const message = {
-      from: 1,
-      to: 3,
-      text: 'hello world'
+      from: userId,
+      to: buddy.userId,
+      text: payload[0].text,
+      user: {
+        // name: username,
+        _id: userId
+      }
     }
-
     this.props.dispatch(sendMessageReq({threadId, message}))
-
-    // const messageId = 222
-    // database.ref('threads/' + threadId + '/messages').push({
-    //   from: 'a',
-    //   to: 'b',
-    //   text: 'Hello'
-    // })
-    // database.ref('threads').once('value').then(threads => {
-    //   threads.forEach(item => console.log(item.key))
-    // })
-
-    // database.ref('threads/' + threadId + '/messages').once('value').then(data => {
-    //   data.forEach(d => console.log(d.val()))
-    // })
   }
 
   render () {
+    const {userId} = this.props.auth.user
+    const {messages} = this.props.chat
     return (
-      <View style={[STYLES.col_center, { flex: 1 }]}>
-        <Text>chat</Text>
-        <Button title='send message' onPress={this._sendMessage} />
-      </View>
+      <GiftedChat
+        messages={messages}
+        onSend={message => this._sendMessage(message)}
+        user={{_id: userId}}
+      />
     )
   }
 }

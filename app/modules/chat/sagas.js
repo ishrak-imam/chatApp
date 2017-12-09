@@ -1,6 +1,6 @@
 
-import { put, call, takeLatest } from 'redux-saga/effects'
-
+import { put, call, takeLatest, fork, take, takeEvery } from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
 import {
   createThreadReq,
   createThreadSucs,
@@ -10,10 +10,13 @@ import {
   sendMessageFail,
   messagesGetReq,
   messagesGetSucs,
-  messagesGetFail
+  messagesGetFail,
+  incomingMessage,
+  startMessageMonitor,
+  stopMessageMonitor
 } from './reducers'
 
-import {formatSnapshot} from '../../utils/helpers'
+import {formatMessages, threadExists} from '../../utils/helpers'
 
 import {pushScene} from '../../navigation/sagas'
 
@@ -21,18 +24,9 @@ import {
   getAllThreads,
   createThread,
   getAllMessages,
-  sendMessage
+  sendMessage,
+  getThreadRef
 } from '../../firebase'
-
-function _threadExists (threads, threadId) {
-  let bool = false
-  threads.forEach(thread => {
-    if (thread.key === threadId) {
-      bool = true
-    }
-  })
-  return bool
-}
 
 export function * watchCreateThread () {
   yield takeLatest(createThreadReq.getType(), workerCreateThread)
@@ -40,12 +34,12 @@ export function * watchCreateThread () {
 
 function * workerCreateThread (action) {
   try {
-    const { threadId, scene, navInfo } = action.payload
+    const { threadId, buddy, scene, navInfo } = action.payload
     const threads = yield call(getAllThreads)
-    if (!_threadExists(threads, threadId)) {
+    if (!threadExists(threads, threadId)) {
       yield call(createThread, { threadId })
     }
-    yield put(createThreadSucs(threadId))
+    yield put(createThreadSucs({threadId, buddy}))
     yield put(pushScene({scene, navInfo}))
   } catch (err) {
     yield put(createThreadFail(err))
@@ -60,8 +54,9 @@ function * workerGetMessages (action) {
   try {
     const { threadId } = action.payload
     const snapShot = yield call(getAllMessages, {threadId})
-    const messages = formatSnapshot(snapShot)
+    const messages = formatMessages(snapShot)
     yield put(messagesGetSucs(messages))
+    yield put(startMessageMonitor({threadId}))
   } catch (err) {
     yield put(messagesGetFail(err))
   }
@@ -78,4 +73,32 @@ function * workerSendMessage (action) {
   } catch (err) {
     yield put(sendMessageFail(err))
   }
+}
+
+function eventEmitterChannel (emitter, type) {
+  return eventChannel((emit) => {
+    emitter.on(type, emit)
+    return () => emitter.off(type, emit)
+  })
+}
+
+export function * watchNewMessages () {
+  yield takeLatest(startMessageMonitor.getType(), createIncomingMessagesSubscription)
+}
+
+function * createIncomingMessagesSubscription (action) {
+  const {threadId} = action.payload
+  const messagesChannel = yield call(eventEmitterChannel, getThreadRef({threadId}), 'child_added')
+
+  yield fork(function * (channel) {
+    yield take(stopMessageMonitor.getType())
+    channel.close()
+    yield put({ type: 'MESSAGES_CHANNEL_CLOSED' })
+  }, messagesChannel)
+
+  yield takeEvery(messagesChannel, function * (message) {
+    // const payload = _formatMessage(message)
+    // yield put(incomingMessage(payload))
+    console.log('incoming message ::: ', message.val())
+  })
 }

@@ -58,8 +58,15 @@ export function getAllMessages (payload) {
 }
 
 export function sendMessage (payload) {
-  const { threadId, message } = payload
+  const { threadId } = payload
+  let {message} = payload
+  message['createdAt'] = fireBase.database.ServerValue.TIMESTAMP
   return database.ref('threads/' + threadId + '/messages').push(message)
+}
+
+export function getThreadRef (payload) {
+  const {threadId} = payload
+  return database.ref('threads/' + threadId + '/messages')
 }
 
 export function onAuthStateChanged (payload) {
