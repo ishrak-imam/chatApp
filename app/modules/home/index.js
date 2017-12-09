@@ -35,7 +35,8 @@ class Home extends Component {
   }
 
   componentDidMount () {
-    this.props.dispatch(userListReq())
+    const currentUserId = this.props.auth.user.userId
+    this.props.dispatch(userListReq({currentUserId}))
   }
 
   _renderUserList () {
@@ -48,7 +49,7 @@ class Home extends Component {
             ? <TouchableOpacity onPress={() => this._goToChat(user)} key={index}>
               <View style={[styles.userItem, STYLES.row_space_around]}>
                 <Text>Name: {user.username}</Text>
-                <Text>Status: ONLINE</Text>
+                {/* <Text>Status: ONLINE</Text> */}
               </View>
             </TouchableOpacity>
             : null

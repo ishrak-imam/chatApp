@@ -52,10 +52,10 @@ export function getAllThreads () {
   return database.ref('threads').once('value')
 }
 
-export function getAllMessages (payload) {
-  const { threadId } = payload
-  return database.ref('threads/' + threadId + '/messages').once('value')
-}
+// export function getAllMessages (payload) {
+//   const { threadId } = payload
+//   return database.ref('threads/' + threadId + '/messages').once('value')
+// }
 
 export function sendMessage (payload) {
   const { threadId } = payload
@@ -76,5 +76,3 @@ export function onAuthStateChanged (payload) {
 export function signOut () {
   fireBase.auth().signOut()
 }
-
-export default database

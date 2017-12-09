@@ -1,18 +1,11 @@
 
 import React, { Component } from 'react'
-import {
-  View, Text, Button
-} from 'react-native'
-
 import { connect } from 'react-redux'
-import STYLES from '../../styles/common'
-
-// import database from '../../firebase'
-
 import { GiftedChat } from 'react-native-gifted-chat'
 
 import {
-  messagesGetReq,
+  // messagesGetReq,
+  startMessageMonitor,
   sendMessageReq,
   stopMessageMonitor
 } from './reducers'
@@ -20,20 +13,6 @@ import {
 class Chat extends Component {
   constructor () {
     super()
-    // this.state = {
-    //   messages: [
-    //     {
-    //       _id: 1,
-    //       text: 'Hello developer',
-    //       createdAt: new Date(),
-    //       user: {
-    //         _id: 2,
-    //         name: 'React Native',
-    //         avatar: 'https://facebook.github.io/react/img/logo_og.png'
-    //       }
-    //     }
-    //   ]
-    // }
     this._sendMessage = this._sendMessage.bind(this)
   }
 
@@ -43,22 +22,19 @@ class Chat extends Component {
 
   componentDidMount () {
     const {threadId} = this.props.chat
-    // database.ref('threads/' + threadId + '/messages').on('value', (snapshot) => {
-    //   console.log(snapshot.val())
-    // })
-    this.props.dispatch(messagesGetReq({ threadId }))
-    // this.props.dispatch(startMessageMonitor({threadId}))
+    // this.props.dispatch(messagesGetReq({ threadId }))
+    this.props.dispatch(startMessageMonitor({threadId}))
   }
 
   _sendMessage (payload) {
     const {threadId, buddy} = this.props.chat
-    const {userId, username} = this.props.auth.user
+    const {userId, username} = this.props.user.currentUser
     const message = {
       from: userId,
       to: buddy.userId,
       text: payload[0].text,
       user: {
-        // name: username,
+        name: username,
         _id: userId
       }
     }
@@ -66,7 +42,7 @@ class Chat extends Component {
   }
 
   render () {
-    const {userId} = this.props.auth.user
+    const {userId} = this.props.user.currentUser
     const {messages} = this.props.chat
     return (
       <GiftedChat
@@ -78,6 +54,6 @@ class Chat extends Component {
   }
 }
 
-const stateToProps = ({auth, user, chat}) => ({auth, user, chat})
+const stateToProps = ({user, chat}) => ({user, chat})
 
 export default connect(stateToProps, dispatch => ({dispatch}))(Chat)

@@ -8,22 +8,27 @@ import {
   sendMessageReq,
   sendMessageSucs,
   sendMessageFail,
-  messagesGetReq,
-  messagesGetSucs,
-  messagesGetFail,
+  // messagesGetReq,
+  // messagesGetSucs,
+  // messagesGetFail,
   incomingMessage,
   startMessageMonitor,
-  stopMessageMonitor
+  stopMessageMonitor,
+  clearMessageThread
 } from './reducers'
 
-import {formatMessages, threadExists} from '../../utils/helpers'
+import {
+  // formatMessages,
+  threadExists,
+  formatMessage
+} from '../../utils/helpers'
 
 import {pushScene} from '../../navigation/sagas'
 
 import {
   getAllThreads,
   createThread,
-  getAllMessages,
+  // getAllMessages,
   sendMessage,
   getThreadRef
 } from '../../firebase'
@@ -46,21 +51,21 @@ function * workerCreateThread (action) {
   }
 }
 
-export function * watchGetMessages () {
-  yield takeLatest(messagesGetReq.getType(), workerGetMessages)
-}
+// export function * watchGetMessages () {
+//   yield takeLatest(messagesGetReq.getType(), workerGetMessages)
+// }
 
-function * workerGetMessages (action) {
-  try {
-    const { threadId } = action.payload
-    const snapShot = yield call(getAllMessages, {threadId})
-    const messages = formatMessages(snapShot)
-    yield put(messagesGetSucs(messages))
-    yield put(startMessageMonitor({threadId}))
-  } catch (err) {
-    yield put(messagesGetFail(err))
-  }
-}
+// function * workerGetMessages (action) {
+//   try {
+//     const { threadId } = action.payload
+//     const snapShot = yield call(getAllMessages, {threadId})
+//     const messages = formatMessages(snapShot)
+//     yield put(messagesGetSucs(messages))
+//     yield put(startMessageMonitor({threadId}))
+//   } catch (err) {
+//     yield put(messagesGetFail(err))
+//   }
+// }
 
 export function * watchSendMessage () {
   yield takeLatest(sendMessageReq.getType(), workerSendMessage)
@@ -94,11 +99,11 @@ function * createIncomingMessagesSubscription (action) {
     yield take(stopMessageMonitor.getType())
     channel.close()
     yield put({ type: 'MESSAGES_CHANNEL_CLOSED' })
+    yield put(clearMessageThread())
   }, messagesChannel)
 
   yield takeEvery(messagesChannel, function * (message) {
-    // const payload = _formatMessage(message)
-    // yield put(incomingMessage(payload))
-    console.log('incoming message ::: ', message.val())
+    const payload = formatMessage(message)
+    yield put(incomingMessage(payload))
   })
 }
