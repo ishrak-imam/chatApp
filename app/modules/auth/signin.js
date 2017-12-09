@@ -41,17 +41,22 @@ class Signin extends Component {
   }
 
   render () {
+    const {loading} = this.props.auth
     return (
       <View style={[{ flex: 1 }, STYLES.col_start, {backgroundColor: 'white', marginTop: 50}]}>
         <View style={{ marginTop: 10 }}>
           {this._renderError()}
         </View>
         <SigninForm onSubmit={this._signIn} config={SIGNIN_FORM} />
-        <View style={{marginTop: 30}}>
-          <TouchableOpacity onPress={this._goToRegister}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>REGISTER</Text>
-          </TouchableOpacity>
-        </View>
+        {
+          (!loading)
+            ? <View style={{marginTop: 30}}>
+              <TouchableOpacity onPress={this._goToRegister}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>REGISTER</Text>
+              </TouchableOpacity>
+            </View>
+            : null
+        }
       </View>
     )
   }

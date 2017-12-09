@@ -91,6 +91,11 @@ function * workerSignOut () {
   }
 }
 
+/**
+ * TODO:
+ * try to implement authStateChanged observer
+ * with redux saga event channel.
+ */
 export function * watchAuthStatus () {
   const authObserver = function (user) {
     if (user) {

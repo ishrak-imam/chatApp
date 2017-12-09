@@ -12,7 +12,8 @@ class Container extends Component {
 
 function mapStateToProps (state, props) {
   return {
-    form: props.config.name
+    form: props.config.name,
+    auth: state.auth
   }
 }
 

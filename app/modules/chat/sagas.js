@@ -102,6 +102,7 @@ function * createIncomingMessagesSubscription (action) {
   }, messagesChannel)
 
   yield takeEvery(messagesChannel, function * (message) {
+    console.log(action)
     const payload = formatSingleObject(message)
     yield put(incomingMessage(payload))
   })

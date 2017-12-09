@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {
   View, Text, TextInput,
-  TouchableOpacity
+  TouchableOpacity, ActivityIndicator
 } from 'react-native'
 
 import { FORM, ERROR_COLOR } from './config'
@@ -57,14 +57,18 @@ class Form extends Component {
   }
 
   render () {
-    const { handleSubmit, config } = this.props
+    const { handleSubmit, config, auth} = this.props
     return (
       <View>
         {this._renderInputs()}
         <View style={[STYLES.col_center, {marginTop: 20}]}>
-          <TouchableOpacity onPress={handleSubmit(this._handleSubmit)}>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>{config.submitText}</Text>
-          </TouchableOpacity>
+          {
+          (!auth.loading)
+            ? <TouchableOpacity onPress={handleSubmit(this._handleSubmit)}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>{config.submitText}</Text>
+            </TouchableOpacity>
+            : <ActivityIndicator size='small' />
+        }
         </View>
       </View>
     )
