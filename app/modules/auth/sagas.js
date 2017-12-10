@@ -8,8 +8,9 @@ import {
   registerReq,
   registerSucs,
   registerFail,
+  signOutReq,
   signOutSucs,
-  signOutReq
+  signOutFail
 } from './reducers'
 
 import {
@@ -82,7 +83,7 @@ function * workerSignOut () {
     yield call(signOut)
     yield put(signOutSucs())
   } catch (err) {
-    console.log('SIGNOUT ERROR ::: ', err)
+    yield put(signOutFail())
   }
 }
 

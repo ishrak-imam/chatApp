@@ -20,6 +20,7 @@ export const registerFail = createAction('REGISTER_FAIL')
 
 export const signOutReq = createAction('SIGNOUT_REQ')
 export const signOutSucs = createAction('SIGNOUT_SUCS')
+export const signOutFail = createAction('SIGNOUT_FAIL')
 
 const auth = createReducer({
 
