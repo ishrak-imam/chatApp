@@ -90,6 +90,9 @@ function * workerSignOut () {
  * TODO:
  * try to implement authStateChanged observer
  * with redux saga event channel.
+ *
+ * thus store doesn't need to be imported
+ * here explicitly
  */
 export function * watchAuthStatus () {
   const authObserver = function (user) {

@@ -1,2 +1,2 @@
 
-import chatApp from './app/index'
+import './app/index'
