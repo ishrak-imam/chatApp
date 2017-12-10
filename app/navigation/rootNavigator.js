@@ -6,9 +6,6 @@ import Register from '../modules/auth/register'
 import Home from '../modules/home/index'
 import Chat from '../modules/chat/index'
 
-// app initialization action
-import { init } from '../modules/auth/reducers'
-
 // store initialization
 import { Provider } from 'react-redux'
 import Store from '../store/configure'
@@ -26,7 +23,6 @@ class Application {
     this._configureScreens = this._configureScreens.bind(this)
     this._configureScreens(Store, Provider)
 
-    this.run = this.run.bind(this)
     this.startApp = this.startApp.bind(this)
   }
 
@@ -42,10 +38,6 @@ class Application {
     })
   }
 
-  run () {
-    this._store.dispatch(init())
-  }
-
   startApp ({ screen, title }) {
     const app = {
       screen,
@@ -56,4 +48,6 @@ class Application {
   }
 }
 
-export default RootNavigator = new Application(Store, Provider) // singleton
+const RootNavigator = new Application(Store, Provider)
+
+export default RootNavigator
