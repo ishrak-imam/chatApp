@@ -9,7 +9,7 @@ import SigninForm from '../shared/form/container'
 import { SIGNIN_FORM, ERROR_COLOR } from '../shared/form/config'
 
 import { getNavInfo } from '../../utils/navigation'
-import { pushScene } from '../../navigation/sagas'
+import { pushScene } from '../../nav/sagas'
 
 import { signInReq } from './reducers'
 

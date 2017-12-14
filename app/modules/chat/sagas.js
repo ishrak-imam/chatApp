@@ -22,7 +22,7 @@ import {
   formatSingleObject
 } from '../../utils/helpers'
 
-import {pushScene} from '../../navigation/sagas'
+import {pushScene} from '../../nav/sagas'
 
 import {
   getAllThreads,

@@ -21,7 +21,7 @@ import {
   signOut
 } from '../../firebase'
 
-import RootNavigator from '../../navigation/rootNavigator'
+import ChatApp from '../../nav/root'
 
 import store from '../../store/configure'
 
@@ -35,7 +35,7 @@ export function * watchStartApp () {
 }
 
 function * workerStartApp (action) {
-  yield call(RootNavigator.startApp, action.payload)
+  yield call(ChatApp.start, action.payload)
 }
 
 export function * watchRegister () {

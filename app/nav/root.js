@@ -23,7 +23,7 @@ class Application {
     this._configureScreens = this._configureScreens.bind(this)
     this._configureScreens(Store, Provider)
 
-    this.startApp = this.startApp.bind(this)
+    this.start = this.start.bind(this)
   }
 
   _configureScreens (Store, Provider) {
@@ -38,7 +38,7 @@ class Application {
     })
   }
 
-  startApp ({ screen, title }) {
+  start ({ screen, title }) {
     const app = {
       screen,
       title,
@@ -48,6 +48,6 @@ class Application {
   }
 }
 
-const RootNavigator = new Application(Store, Provider)
+const ChatApp = new Application(Store, Provider)
 
-export default RootNavigator
+export default ChatApp

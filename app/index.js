@@ -1,4 +1,4 @@
 
-import './navigation/rootNavigator'
+import './nav/root'
 
 console.disableYellowBox = true
